@@ -1,0 +1,52 @@
+-- PostgreSQL
+CREATE TABLE customer (
+    customerid SERIAL PRIMARY KEY,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    address VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+CREATE TABLE order_header (
+    orderid SERIAL PRIMARY KEY,
+    order_date DATE,
+    customerid INT,
+    FOREIGN KEY (customerid) REFERENCES customer(customerid)
+);
+
+CREATE TABLE product (
+    productid SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    specification TEXT
+);
+
+CREATE TABLE order_line (
+    order_lineid SERIAL PRIMARY KEY,
+    orderid INT,
+    productid INT,
+    quantity INT,
+    FOREIGN KEY (orderid) REFERENCES order_header(orderid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
+);
+
+CREATE TABLE delivery (
+    deliveryid SERIAL PRIMARY KEY,
+    orderid INT,
+    type VARCHAR(50),
+    status VARCHAR(50),
+    departure DATE,
+    arrival DATE,
+    FOREIGN KEY (orderid) REFERENCES order_header(orderid)
+);
+
+CREATE TABLE payment (
+    paymentid SERIAL PRIMARY KEY,
+    pdate DATE,
+    type VARCHAR(50),
+    orderid INT,
+    customerid INT,
+    total DECIMAL(10, 2),
+    FOREIGN KEY (orderid) REFERENCES order_header(orderid),
+    FOREIGN KEY (customerid) REFERENCES customer(customerid)
+);
